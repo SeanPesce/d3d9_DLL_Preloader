@@ -1,4 +1,6 @@
 /*
+	d3d9.dll Preloader (32-bit)
+	
 	Simple d3d9.dll wrapper used by an external program to load
 	d3d9.dll from the system directory instead of the local
 	directory to circumvent any existing d3d9.dll wrappers that
