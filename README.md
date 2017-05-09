@@ -1,7 +1,7 @@
-# d3d9.dll Preloader  
+# Preloader for d3d9.dll and dxgi.dll  
 Author: Sean Pesce
 
-Simple d3d9.dll wrapper used by programs to load d3d9.dll from the system directory instead of the local directory to circumvent any existing d3d9.dll wrappers that may cause incompatibility issues (such as PvP Watchdog for Dark Souls). This wrapper does not modify or add to the functionality of the original d3d9.dll.  
+Simple d3d9.dll wrapper used by programs to load d3d9.dll and dxgi.dll from the system directory instead of the local directory to circumvent any existing wrappers for these DLLs that may cause incompatibility issues (such as SweetFX or PvP Watchdog for Dark Souls). This wrapper does not modify or add to the functionality of the original d3d9.dll.  
 
 ## C# Implementation  
 
@@ -18,7 +18,7 @@ static class Kernel32_LoadLib
 Then, load the library at runtime, like so:  
 
 ```c#
-IntPtr d3d9_preload = Kernel32_LoadLib.LoadLibrary(@"d3d9_preloader.dll");
+IntPtr dll_preload = Kernel32_LoadLib.LoadLibrary(@"dll_preloader.dll");
 ```  
 
 ## C++ Implementation
@@ -26,6 +26,6 @@ IntPtr d3d9_preload = Kernel32_LoadLib.LoadLibrary(@"d3d9_preloader.dll");
 Include the Win32 API header in your project (`#include <Windows.h>`), and load the library at runtime, like so:  
 
 ```c++
-LoadLibrary("d3d9_preloader.dll");
+LoadLibrary("dll_preloader.dll");
 ```  
 

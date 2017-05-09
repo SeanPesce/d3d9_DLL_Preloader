@@ -1,11 +1,15 @@
 /*
-	d3d9.dll Preloader (64-bit)
+	DLL Preloader (64-bit)
 
 	Simple d3d9.dll wrapper used by an external program to load
 	d3d9.dll from the system directory instead of the local
 	directory to circumvent any existing d3d9.dll wrappers that
 	may cause incompatibility issues. This wrapper does not
 	modify or add to the functionality of the original d3d9.dll.
+
+	dxgi.dll is also loaded from the system directory, as .NET
+	GUI programs using WPF can also encounter compatibility 
+	issues from a modified dxgi.dll wrapper.
 
 	Author: Sean Pesce
 */
@@ -16,13 +20,15 @@
 HINSTANCE mHinst = 0, mHinstDLL = 0;
 extern "C" UINT_PTR mProcs[18] = {0};
 
-void LoadOriginalDll();
+void load_d3d9_dll();
+void load_dxgi_dll();
 
 LPCSTR mImportNames[] = {"D3DPERF_BeginEvent", "D3DPERF_EndEvent", "D3DPERF_GetStatus", "D3DPERF_QueryRepeatFrame", "D3DPERF_SetMarker", "D3DPERF_SetOptions", "D3DPERF_SetRegion", "DebugSetLevel", "DebugSetMute", "Direct3D9EnableMaximizedWindowedModeShim", "Direct3DCreate9", "Direct3DCreate9Ex", "Direct3DShaderValidatorCreate9", "PSGPError", "PSGPSampleTexture", (LPCSTR)16, (LPCSTR)17, (LPCSTR)18};
 BOOL WINAPI DllMain( HINSTANCE hinstDLL, DWORD fdwReason, LPVOID lpvReserved ) {
 	mHinst = hinstDLL;
 	if ( fdwReason == DLL_PROCESS_ATTACH ) {
-		LoadOriginalDll();
+		load_d3d9_dll();
+		load_dxgi_dll();
 		for ( int i = 0; i < 18; i++ )
 			mProcs[ i ] = (UINT_PTR)GetProcAddress( mHinstDLL, mImportNames[ i ] );
 	} else if ( fdwReason == DLL_PROCESS_DETACH ) {
@@ -51,9 +57,9 @@ extern "C" void ExportByOrdinal17();
 extern "C" void ExportByOrdinal18();
 
 
-// Loads the original DLL from the default system directory
+// Loads the original d3d9.dll from the default system directory
 //	Function originally written by Michael Koch
-void LoadOriginalDll()
+void load_d3d9_dll()
 {
 	char buffer[MAX_PATH];
 
@@ -70,6 +76,28 @@ void LoadOriginalDll()
 	if (!mHinstDLL)
 	{
 		OutputDebugString("PROXYDLL: Original d3d9.dll not loaded ERROR ****\r\n");
+		ExitProcess(0); // Exit the hard way
+	}
+}
+
+// Loads the original dxgi.dll from the default system directory
+void load_dxgi_dll()
+{
+	char buffer[MAX_PATH];
+
+	// Get path to system directory and to dxgi.dll
+	GetSystemDirectory(buffer, MAX_PATH);
+
+	// Append DLL name
+	strcat_s(buffer, "\\dxgi.dll");
+
+	// Try to load the system's dxgi.dll, if pointer empty
+	if (!mHinstDLL) mHinstDLL = LoadLibrary(buffer);
+
+	// Debug
+	if (!mHinstDLL)
+	{
+		OutputDebugString("PROXYDLL: Original dxgi.dll not loaded ERROR ****\r\n");
 		ExitProcess(0); // Exit the hard way
 	}
 }
