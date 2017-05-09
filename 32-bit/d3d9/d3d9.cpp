@@ -17,7 +17,7 @@
 #include <Windows.h>
 #include <stdio.h>
 
-HINSTANCE mHinst = 0, mHinstDLL = 0;
+HINSTANCE mHinst = 0, mHinstDLL = 0, mHinst_dxgi_DLL = 0;
 UINT_PTR mProcs[18] = {0};
 
 void load_d3d9_dll();
@@ -92,10 +92,10 @@ void load_dxgi_dll()
 	strcat_s(buffer, "\\dxgi.dll");
 
 	// Try to load the system's dxgi.dll, if pointer empty
-	if (!mHinstDLL) mHinstDLL = LoadLibrary(buffer);
+	if (!mHinst_dxgi_DLL) mHinst_dxgi_DLL = LoadLibrary(buffer);
 
 	// Debug
-	if (!mHinstDLL)
+	if (!mHinst_dxgi_DLL)
 	{
 		OutputDebugString("PROXYDLL: Original dxgi.dll not loaded ERROR ****\r\n");
 		ExitProcess(0); // Exit the hard way
