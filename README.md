@@ -29,3 +29,15 @@ Include the Win32 API header in your project (`#include <Windows.h>`), and load 
 LoadLibrary("dll_preloader.dll");
 ```  
 
+
+## Built With  
+ * [Visual Studio 2015](https://www.visualstudio.com/vs/older-downloads/)  
+
+
+## License  
+[GNU General Public License v3.0](LICENSE)  
+
+
+---------------------------------------------
+
+For inquiries and/or information about me, visit my **[personal website](https://SeanPesce.github.io)**.  
